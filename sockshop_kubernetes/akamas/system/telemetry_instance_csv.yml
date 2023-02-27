@@ -1,0 +1,22 @@
+provider: CSV File            # this is an instance of the Csv provider
+config:
+ address: 10.66.12.13   # the adress of the host with the csv files 
+ port: 22                     # the port used to connect
+ authType: password           # the authentication method
+ username: root             # the username used to connect
+ auth: Welcome24!                 # the authentication credential
+ protocol: scp                # the protocol used to retrieve the file
+ fieldSeparator: ","          # the character used as field separator in the csv files
+ remoteFilePattern: /opt/sockshop_kubernetes/scripts/jmeter/sokshop/result_jmeter_experiment.csv    # the path of the csv files to import
+ componentColumn: Label                     # the header of the column with component names
+ timestampColumn: timeStamp                            # the header of the column with the time stamp
+ timestampFormat: yyyy-MM-dd HH:mm:ss SSS         # the format of the timestamp
+ logLevel: DETAILED
+metrics:
+ - metric: transactions_response_time                             
+   datasourceMetric: 90 Line                     
+ - metric: transactions_throughput                            # the name of the Akamas metric
+   datasourceMetric: Throughput                     # the header of the column with the original metric
+ - metric: transactions_error_rate 
+   datasourceMetric: Error
+

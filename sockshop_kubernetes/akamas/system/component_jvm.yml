@@ -1,0 +1,8 @@
+name: jvm
+description: sockshop jvm11 component
+componentType: java-openjdk-11
+properties:
+    prometheus:
+        instance: sut_sockshop_as
+        job: jmx
+

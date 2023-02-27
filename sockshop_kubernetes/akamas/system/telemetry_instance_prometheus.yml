@@ -1,0 +1,27 @@
+provider: Prometheus
+config:
+ address: 10.66.12.68
+ port: 30900
+
+metrics:
+  #OPTPACK METRICS
+  - metric: transactions_response_time
+    datasourceMetric: avg(rate(ResponseTime_sum{code="null"}[$DURATION$])/rate(ResponseTime_count{code="null"}[$DURATION$])>0)
+  - metric: transactions_response_time_p50
+    datasourceMetric: ResponseTime{quantile="0.5",code="null"}
+  - metric: transactions_response_time_p85
+    datasourceMetric: ResponseTime{quantile="0.85",code="null"}
+  - metric: transactions_response_time_p90
+    datasourceMetric: ResponseTime{quantile="0.9",code="null"}
+  - metric: transactions_response_time_p99
+    datasourceMetric: ResponseTime{quantile="0.99",code="null"}
+  - metric: transactions_throughput
+    datasourceMetric: sum(rate(Ratio_success[$DURATION$]))
+  - metric: transactions_error_throughput
+    datasourceMetric: sum(rate(Ratio_failure[$DURATION$]))
+  - metric: transactions_error_rate
+    datasourceMetric: (avg(rate(Ratio_failure[$DURATION$]))/avg(rate(Ratio_total[$DURATION$])))*100
+  - metric: users
+    datasourceMetric: sum(jmeter_threads{state="active"})
+  
+

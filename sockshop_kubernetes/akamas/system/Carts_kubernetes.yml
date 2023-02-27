@@ -1,0 +1,3 @@
+name: carts_kubernetes
+description: Carts services Sock-shop
+componentType: Kubernetes Container

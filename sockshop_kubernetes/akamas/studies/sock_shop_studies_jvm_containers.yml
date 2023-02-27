@@ -1,0 +1,168 @@
+system: sockshop
+name: sockshop_optimization_container_19_12_2022
+workflow: sockshop_workflow
+goal:
+  objective: maximize
+  constraints:
+    absolute:
+    - name: ResponseTimeSLO
+      formula: sockshop.transactions_response_time <= 120000 
+    - name: error_rate
+      formula: sockshop.transactions_error_rate <= 0.1   
+    - name: ThroughputSLO
+      formula: sockshop.transactions_throughput >= 0.2
+  function:
+    formula: sockshop.transactions_throughput / sockshop.transactions_response_time
+
+parameterConstraints:
+  - name: heap_carts_jvm
+    formula: carts_jvm.jvm_maxHeapSize  >= carts_jvm.jvm_newSize
+  - name: heap_orders_jvm
+    formula: orders_jvm.jvm_maxHeapSize  >= orders_jvm.jvm_newSize
+  - name: heap_queue_master_jvm
+    formula: queue_master_jvm.jvm_maxHeapSize  >= queue_master_jvm.jvm_newSize
+  - name: heap_shipping_jvm
+    formula: shipping_jvm.jvm_maxHeapSize  >= shipping_jvm.jvm_newSize
+parametersSelection:
+  - name: carts_jvm.jvm_minHeapSize
+    domain: [32, 256]
+  - name: carts_jvm.jvm_maxHeapSize
+    domain: [64, 1024]
+  - name: carts_jvm.jvm_gcType
+  - name: carts_jvm.jvm_newSize
+    domain: [64, 1024]
+  - name: carts_jvm.jvm_parallelGCThreads
+    domain: [1, 2]
+  - name: carts_jvm.jvm_survivorRatio
+  - name: carts_jvm.jvm_maxTenuringThreshold
+
+  - name: orders_jvm.jvm_minHeapSize
+    domain: [32, 256]
+  - name: orders_jvm.jvm_maxHeapSize
+    domain: [64, 1024]
+  - name: orders_jvm.jvm_gcType
+  - name: orders_jvm.jvm_newSize
+    domain: [64, 1024]
+  - name: orders_jvm.jvm_parallelGCThreads
+    domain: [1, 2]
+  - name: orders_jvm.jvm_survivorRatio
+  - name: orders_jvm.jvm_maxTenuringThreshold
+
+  - name: queue_master_jvm.jvm_minHeapSize
+    domain: [32, 256]
+  - name: queue_master_jvm.jvm_maxHeapSize
+    domain: [64, 1024]
+  - name: queue_master_jvm.jvm_gcType
+  - name: queue_master_jvm.jvm_newSize
+    domain: [64, 1024]
+  - name: queue_master_jvm.jvm_parallelGCThreads
+    domain: [1, 2]
+  - name: queue_master_jvm.jvm_survivorRatio
+  - name: queue_master_jvm.jvm_maxTenuringThreshold
+
+  - name: shipping_jvm.jvm_minHeapSize
+    domain: [32, 256]
+  - name: shipping_jvm.jvm_maxHeapSize
+    domain: [64, 1024]
+  - name: shipping_jvm.jvm_gcType
+  - name: shipping_jvm.jvm_newSize
+    domain: [64, 1024]
+  - name: shipping_jvm.jvm_parallelGCThreads
+    domain: [1, 2]
+  - name: shipping_jvm.jvm_survivorRatio
+  - name: shipping_jvm.jvm_maxTenuringThreshold
+  - name: carts_kubernetes.cpu_limit
+    domain: [100, 400]
+  - name: carts_kubernetes.memory_limit
+    domain: [256, 512]
+  - name: carts_kubernetes.cpu_request
+    domain: [20, 100]
+  - name: carts_kubernetes.memory_request
+    domain: [100, 256]
+  - name: orders_kubernetes.cpu_limit
+    domain: [100, 400]
+  - name: orders_kubernetes.memory_limit
+    domain: [256, 512]
+  - name: orders_kubernetes.cpu_request
+    domain: [20, 100]
+  - name: orders_kubernetes.memory_request
+    domain: [100, 256]
+
+  - name: shipping_kubernetes.cpu_limit
+    domain: [100, 400]
+  - name: shipping_kubernetes.memory_limit
+    domain: [256, 512]
+  - name: shipping_kubernetes.cpu_request
+    domain: [20, 100]
+  - name: shipping_kubernetes.memory_request
+    domain: [100, 256]
+
+metricsSelection:
+
+  - carts_kubernetes.container_cpu_limit
+  - carts_kubernetes.container_cpu_request
+  - carts_kubernetes.container_memory_limit
+  - carts_kubernetes.container_memory_limit
+
+  - orders_kubernetes.container_cpu_limit
+  - orders_kubernetes.container_cpu_request
+  - orders_kubernetes.container_memory_limit
+  - orders_kubernetes.container_memory_limit
+  - shipping_kubernetes.container_cpu_limit
+  - shipping_kubernetes.container_cpu_request
+  - shipping_kubernetes.container_memory_limit
+  - shipping_kubernetes.container_memory_limit
+  
+  - carts_jvm.jvm_heap_size
+  - carts_jvm.jvm_heap_used
+  - orders_jvm.jvm_heap_size
+  - orders_jvm.jvm_heap_used 
+  - queue_master_jvm.jvm_heap_size
+  - queue_master_jvm.jvm_heap_used
+  - shipping_jvm.jvm_heap_size
+  - shipping_jvm.jvm_heap_used
+  - sockshop.transactions_response_time
+  - sockshop.transactions_throughput
+  - sockshop.transactions_error_rate
+trialAggregation: AVG
+numberOfTrials: 1
+steps:
+  - name: baseline
+    type: baseline
+    values:
+      carts_kubernetes.cpu_limit: 300
+      carts_kubernetes.memory_limit: 500
+      carts_kubernetes.cpu_request: 100
+      carts_kubernetes.memory_request: 300
+
+      orders_kubernetes.cpu_limit: 300
+      orders_kubernetes.memory_limit: 500
+      orders_kubernetes.cpu_request: 100
+      orders_kubernetes.memory_request: 300
+
+      shipping_kubernetes.cpu_limit: 300
+      shipping_kubernetes.memory_limit: 500
+      shipping_kubernetes.cpu_request: 100
+      shipping_kubernetes.memory_request: 300
+      carts_jvm.jvm_minHeapSize: 64
+      carts_jvm.jvm_maxHeapSize: 128
+      carts_jvm.jvm_gcType: G1
+
+      orders_jvm.jvm_minHeapSize: 64
+      orders_jvm.jvm_maxHeapSize: 128
+      orders_jvm.jvm_gcType: G1
+
+      queue_master_jvm.jvm_minHeapSize: 64
+      queue_master_jvm.jvm_maxHeapSize: 128
+      queue_master_jvm.jvm_gcType: G1
+
+      shipping_jvm.jvm_minHeapSize: 64
+      shipping_jvm.jvm_maxHeapSize: 128
+      shipping_jvm.jvm_gcType: G1
+
+
+  - name: optimization
+    type: optimize
+    numberOfExperiments: 40
+    maxFailedExperiments: 10
+    numberOfInitExperiments: 1

@@ -1,0 +1,3 @@
+name: payment_kubernetes
+description: Payment service Sock-shop
+componentType: Kubernetes Container

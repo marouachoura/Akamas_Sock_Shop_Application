@@ -1,0 +1,6 @@
+2022-11-23 16:49:35,615 WARN o.a.j.u.JMeterUtils: Exception 'null' occurred when fetching String property:'sampleresult.default.encoding', defaulting to: ISO-8859-1
+2022-11-23 16:49:35,615 WARN o.a.j.u.JMeterUtils: Exception 'null' occurred when fetching String property:'jmeterPlugin.prefixPlugins'
+2022-11-23 16:49:35,615 INFO k.a.j.PluginsCMDWorker: Using JMeterPluginsCMD v. N/A
+2022-11-23 16:49:35,615 INFO o.a.j.u.JMeterUtils: Setting Locale to en_US
+2022-11-23 16:49:35,631 INFO k.a.j.JMeterPluginsUtils: Loading user properties from: C:\Users\mchoura\Desktop\sockshop_kubernetes_Monam\scripts\jmeter\apache-jmeter-5.5\bin\user.properties
+2022-11-23 16:49:35,631 INFO k.a.j.JMeterPluginsUtils: Loading system properties from: C:\Users\mchoura\Desktop\sockshop_kubernetes_Monam\scripts\jmeter\apache-jmeter-5.5\bin\system.properties

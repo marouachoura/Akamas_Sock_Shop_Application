@@ -1,0 +1,41 @@
+system: sockshop
+name: sockshop optimization
+workflow: sockshop_jvm
+goal:
+  objective: minimize
+  function:
+    formula: sockshop.transactions_response_time
+  constraints:
+    absolute:
+    - name: ResponseTimeSLO
+      formula: sockshop.transactions_response_time <= 570        # 100ms service-level objective (SLO)
+windowing:
+  type: trim 
+  trim: [100s, 10s]
+  task: test
+parameterConstraints:
+  - name: heap
+    formula: jvm.jvm_maxHeapSize  >= jvm.jvm_newSize
+parametersSelection:
+  - name: jvm.jvm_minHeapSize
+    domain: [32, 256]
+  - name: jvm.jvm_maxHeapSize
+    domain: [64, 1024]
+  - name: jvm.jvm_gcType
+  - name: jvm.jvm_newSize
+    domain: [64, 1024]
+  - name: jvm.jvm_parallelGCThreads
+    domain: [1, 2]
+  - name: jvm.jvm_survivorRatio
+  - name: jvm.jvm_maxTenuringThreshold
+trialAggregation: AVG
+numberOfTrials: 1
+steps:
+  - name: baseline
+    type: baseline
+  - name: optimization
+    type: optimize
+    numberOfExperiments: 25
+    maxFailedExperiments: 10 
+
+

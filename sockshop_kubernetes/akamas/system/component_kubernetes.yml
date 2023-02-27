@@ -1,0 +1,3 @@
+name: sock_shop_kubernetes
+description: Sock-shop
+componentType: Kubernetes Container
