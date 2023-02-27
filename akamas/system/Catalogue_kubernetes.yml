@@ -1,0 +1,3 @@
+name: catalogue_kubernetes
+description: catalogue service Sock-shop
+componentType: Kubernetes Container

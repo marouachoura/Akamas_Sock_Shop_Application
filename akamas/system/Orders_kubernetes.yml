@@ -1,0 +1,3 @@
+name: orders_kubernetes
+description: Orders service Sock-shop
+componentType: Kubernetes Container

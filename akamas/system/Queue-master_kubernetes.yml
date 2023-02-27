@@ -1,0 +1,3 @@
+name: queue_master_kubernetes
+description: Queue master service Sock-shop
+componentType: Kubernetes Container

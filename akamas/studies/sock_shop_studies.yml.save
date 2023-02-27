@@ -1,0 +1,64 @@
+system: sockshop
+name: sockshop_optimization_2
+workflow: sockshop_workflow
+goal:
+  objective: minimize
+  function:
+    formula: sockshop.transactions_response_time
+  constraints:
+    absolute:
+    - name: ResponseTimeSLO
+      formula: sockshop.transactions_response_time <= 570        # 100ms service-level objective (SLO)
+windowing:
+  type: trim 
+  trim: [100s, 10s]
+  task: test
+parameterConstraints:
+  - name: heap
+    formula: jvm.jvm_maxHeapSize  >= jvm.jvm_newSize
+parametersSelection:
+  - name: jvm.jvm_minHeapSize
+    domain: [32, 256]
+  - name: jvm.jvm_maxHeapSize
+    domain: [64, 1024]
+  - name: jvm.jvm_gcType
+  - name: jvm.jvm_newSize
+    domain: [64, 1024]
+  - name: jvm.jvm_parallelGCThreads
+    domain: [1, 2]
+  - name: jvm.jvm_survivorRatio
+  - name: jvm.jvm_maxTenuringThreshold
+  - name: sock_shop_kubernetes.cpu_limit
+    domain: [100, 400]
+  - name: sock_shop_kubernetes.memory_limit
+    domain: [256, 512]
+  - name: sock_shop_kubernetes.cpu_request
+    domain: [20, 100]
+  - name: sock_shop_kubernetes.memory_request
+    domain: [100, 256]
+metricsSelection:
+  - online_boutique.cost
+  - online_boutique.transactions_throughput
+  - online_boutique.transactions_error_rate
+  - online_boutique.transactions_response_time
+  - online_boutique.transactions_response_time_p95
+  - online_boutique.users
+  - frontend.container_cpu_used
+  - frontend.container_cpu_util
+  - frontend.container_cpu_limit
+  - frontend.container_cpu_throttle_time
+  - frontend.container_memory_used
+  - frontend.container_memory_util
+  - frontend.container_memory_limit
+trialAggregation: AVG
+numberOfTrials: 1
+steps:
+  - name: baseline
+    type: baseline
+  - name: optimization
+    type: optimize
+    numberOfExperiments: 25
+    maxFailedExperiments: 10 
+
+
+

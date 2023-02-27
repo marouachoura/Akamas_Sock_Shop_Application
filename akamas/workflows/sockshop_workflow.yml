@@ -1,0 +1,72 @@
+name: sockshop_workflow
+tasks:
+
+- name: stop sockshop
+  operator: Executor
+  arguments:
+    timeout: 120s
+    retries: 0
+    command: bash /opt/sockshop_kubernetes/scripts/sockshop/stop_sockshop.sh
+    host:
+      hostname: 10.66.12.13
+      username: root
+      key: /root/.ssh/id_rsa
+
+- name: set sockshop jvm and containers params
+  operator: FileConfigurator
+  arguments:
+    timeout: 30s
+    retries: 0
+    source:
+      hostname: 10.66.12.13
+      username: root
+      key: /root/.ssh/id_rsa
+      path: /opt/sockshop_kubernetes/conf_template/tuned-microservices.yaml.template
+    target:
+      hostname: 10.66.12.13
+      username: root
+      key: /root/.ssh/id_rsa
+      path: /opt/sockshop_kubernetes/microservices-demo/deploy/kubernetes/sockshop_orders/tuned-microservices.yaml
+
+- name: start sockshop
+  operator: Executor
+  arguments:
+    timeout: 60s
+    retries: 0
+    command: bash /opt/sockshop_kubernetes/scripts/sockshop/start_sockshop.sh 
+    host:
+      hostname: 10.66.12.13
+      username: root
+      key: /root/.ssh/id_rsa
+
+- name: check sockshop service status
+  operator: Executor
+  arguments:
+    retries: 0
+    command: bash /opt/sockshop_kubernetes/scripts/sockshop/check_sockshop.sh 
+    host:
+      hostname: 10.66.12.13
+      username: root
+      key: /root/.ssh/id_rsa
+      
+- name: warmup_test
+  operator: Executor
+  arguments:
+    retries: 0
+    command: bash /opt/sockshop_kubernetes/scripts/jmeter/jemeter_Warmup.sh 
+    host:
+      hostname: 10.66.12.13
+      username: root
+      key: /root/.ssh/id_rsa
+      
+- name: test
+  operator: Executor
+  arguments:
+    retries: 0
+    command: bash /opt/sockshop_kubernetes/scripts/jmeter/jmeter.sh 
+    host:
+      hostname: 10.66.12.13
+      username: root
+      key: /root/.ssh/id_rsa
+
+

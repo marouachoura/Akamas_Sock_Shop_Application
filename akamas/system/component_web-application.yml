@@ -1,0 +1,7 @@
+name: sockshop
+description: sockshop web application component
+componentType: Web Application
+properties:
+    prometheus:
+        instance: jmeter
+        job: jmeter

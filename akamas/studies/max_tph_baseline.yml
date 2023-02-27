@@ -1,0 +1,35 @@
+system: sockshop
+name: sockshop baseline 
+workflow: sockshop_jvm
+goal:
+  objective: maximize
+  function:
+    formula: sockshop.transactions_throughput
+  constraints:
+    relativeToBaseline: 
+    - sockshop.transactions_response_time <= +5%
+    - sockshop.transactions_error_rate <= +5%
+windowing:
+  type: trim 
+  trim: [150s, 60s]
+  task: test
+parameterConstraints:
+  - name: heap
+    formula: jvm.jvm_maxHeapSize  >= jvm.jvm_newSize
+parametersSelection:
+  - name: jvm.jvm_maxHeapSize
+    domain: [128, 2048]
+  - name: jvm.jvm_gcType
+  - name: jvm.jvm_newSize
+    domain: [128, 2048]
+  - name: jvm.jvm_parallelGCThreads
+    domain: [1, 2]
+  - name: jvm.jvm_survivorRatio
+  - name: jvm.jvm_maxTenuringThreshold
+trialAggregation: AVG
+numberOfTrials: 5
+steps:
+  - name: baseline
+    type: baseline
+
+
